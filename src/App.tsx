@@ -9,7 +9,7 @@ const DEFAULT_LANGUAGE = "javascript";
 export const App = () => {
   const [editorContent, setEditorContent] = useState('');
 
-  const editorDidMount = (editor: { getValue: () => any; }, monaco: any) => {
+  const editorDidMount = (editor: { getValue: () => string; }) => {
     console.log('editor did mount!', editor);
     const content = editor.getValue();
     setEditorContent(content);
