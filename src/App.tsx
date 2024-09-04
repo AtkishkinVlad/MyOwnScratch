@@ -56,6 +56,9 @@ export const App = () => {
       ];
 
       monaco.languages.registerCompletionItemProvider('myLang', {
+        // TODO: доразобраться с автокомплитом для своего языка
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         provideCompletionItems: () => {
             return { suggestions: functionSnippets };
         }
