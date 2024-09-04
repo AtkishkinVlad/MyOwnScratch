@@ -1,13 +1,56 @@
 import { Button, SidePage, Toast } from "@skbkontur/react-ui"
 import './App.css';
-import { Editor } from "@monaco-editor/react";
-import { useState } from "react";
+import { Editor, useMonaco } from "@monaco-editor/react";
+import { useEffect, useState } from "react";
 
 const INITIAL_VALUE = "// Опиши действия котика тут";
-const DEFAULT_LANGUAGE = "javascript";
+const DEFAULT_LANGUAGE = "myLang";
 
 export const App = () => {
   const [editorContent, setEditorContent] = useState('');
+  const monaco = useMonaco();
+
+  useEffect(() => {
+    if (monaco) {
+      const myLanguage = {
+        id: 'myLang',
+        extensions: ['.mylang'],
+        aliases: ['My Lang', 'mylang'],
+        mimetypes: ['text/x-mylang']
+      };
+      monaco.languages.register(myLanguage);
+
+      // Snippets for your functions
+      const functionSnippets = [
+        {
+          label: "налево",
+          detail: "Call the 'nalevo' function.",
+          body: ["налево();"]
+        },
+        {
+          label: "направо",
+          detail: "Call the 'napravo' function.",
+          body: ["направо();"]
+        },
+        {
+          label: "вверх",
+          detail: "Call the 'vverh' function.",
+          body: ["вверх();"]
+        },
+        {
+          label: "вниз",
+          detail: "Call the 'vniz' function.",
+          body: ["вниз();"]
+        }
+      ];
+
+      monaco.languages.registerCompletionItemProvider('myLang', {
+        provideCompletionItems: () => {
+            return { suggestions: functionSnippets };
+        }
+      });
+    }
+  }, [monaco])
 
   const editorDidMount = (editor: { getValue: () => string; }) => {
     console.log('editor did mount!', editor);
