@@ -11,6 +11,8 @@ import { KisikModel } from './kisik.model';
 import { observer } from "mobx-react";
 import { BugModel } from './bug.model';
 import { runInAction } from "mobx";
+import { TransportAirRocketIcon24Regular } from '@skbkontur/icons/icons/TransportAirRocketIcon/TransportAirRocketIcon24Regular'
+import { QuestionCircleIcon16Regular } from '@skbkontur/icons/icons/QuestionCircleIcon/QuestionCircleIcon16Regular'
 
 const INITIAL_VALUE = `// Опиши действия котика тут
 // Пример команд на первый спринт (ход)
@@ -156,11 +158,11 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
       />
     </div>
         </SidePage.Body>
-        <SidePage.Footer gap={96}>
-          <Button onClick={() => moveKisik(editorContent.split('\n') as Command[], kisikModel)} size="large" use="primary">
+        <SidePage.Footer gap={80}>
+          <Button rightIcon={<TransportAirRocketIcon24Regular />} onClick={() => moveKisik(editorContent.split('\n') as Command[], kisikModel)} size="large" use="primary">
             Запустить ход
           </Button>
-          <Link target="_blank" href="https://kontur.ru/bugbounty" >
+          <Link rightIcon={<QuestionCircleIcon16Regular />} target="_blank" href="https://kontur.ru/bugbounty" >
             Узнать про Bug Bounty в Контуре
           </Link>
         </SidePage.Footer>
