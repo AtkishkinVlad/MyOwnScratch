@@ -9,11 +9,15 @@ export class KisikModel {
   }
 
   changeX(x: number) {
-    this.x += x;
+    if (this.x + x < 550 && this.x - x > -550) {
+      this.x += x;
+    }
   }
 
   changeY(y: number) {
-    this.y += y;
+    if (this.y + y < 550 && this.y - y > -550) {
+      this.y += y;
+    }
   }
 
   get currentX() {

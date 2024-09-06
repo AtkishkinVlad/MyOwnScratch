@@ -6,8 +6,8 @@ function getRandom(list: number[]): number {
   return list[Math.floor((Math.random()*list.length))];
 }
 
-const initialX = [200, 260, -320];
-const initialY = [100, -200, 300];
+const initialX = [100, 170, -140];
+const initialY = [100, -100, 150];
 
 function equal(firstValue: number, secondValue: number, dispense: number): boolean {
   return Math.abs(firstValue - secondValue) <= dispense;
@@ -22,11 +22,20 @@ export class BugModel {
   }
 
   changeX(x: number) {
-    this.x += x;
+    if (this.x + x < 550 && this.x - x > -550) {
+      this.x += x;
+    }
   }
 
   changeY(y: number) {
-    this.y += y;
+    if (this.y + y < 550 && this.y - y > -550) {
+      this.y += y;
+    }
+  }
+
+  removeBug() {
+    this.x = Infinity;
+    this.y = Infinity;
   }
 
   get currentX() {
@@ -46,8 +55,7 @@ export class BugModel {
 
     if (equal(this.x, x, 15) && equal(this.y, y, 15)) {
       SingleToast.push('Кисик поймал баг')
-      this.changeX(10_000)
-      this.changeY(10_000)
+      this.removeBug()
       return true;
     }
 

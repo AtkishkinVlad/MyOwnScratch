@@ -10,6 +10,7 @@ import { Command, moveKisik } from "./extractCommandsAndCount";
 import { KisikModel } from './kisik.model';
 import { observer } from "mobx-react";
 import { BugModel } from './bug.model';
+import { runInAction } from "mobx";
 
 const INITIAL_VALUE = `// Опиши действия котика тут
 // Пример команд на первый спринт (ход)
@@ -22,6 +23,12 @@ const DEFAULT_LANGUAGE = "myLang";
 type Props = {
   kisikModel: KisikModel;
   bugModel: BugModel;
+}
+
+function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
@@ -84,11 +91,22 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
     setEditorContent(content);
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      runInAction(() => {
+        bugModel.changeX(getRandomInt(-40, 40))
+        bugModel.changeY(getRandomInt(-40, 40))
+      })
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [bugModel])
+
   return (
     <>
       <main>
       <Stage width={2000} height={2000} options={{ background: KonturColors.greenMint70 }}>
-      <Container position={[300, 300]}>
+      <Container position={[500, 300]}>
         <Sprite width={40} height={40} image={kisikIcon} x={kisikModel.currentX} y={kisikModel.currentY} />
         <Sprite width={40} height={40} image={bagIcon} x={bugModel.currentX} y={bugModel.currentY} />
       </Container>
@@ -104,7 +122,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
             Тебе нужно помочь котику с помощью команд поймать все баги 😸
           </p>
           <p className="rules">
-            Баги будут гулять по разным частям системы и временами пропадать сами собой 😅
+            Баги будут гулять по разным частям системы, но ты точно сможешь остановить их 😎
           </p>
           <ul>
             <li>
