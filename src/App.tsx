@@ -87,7 +87,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
   return (
     <>
       <main>
-      <Stage width={1200} height={800} options={{ background: KonturColors.greenMint70 }}>
+      <Stage width={2000} height={2000} options={{ background: KonturColors.greenMint70 }}>
       <Container position={[300, 300]}>
         <Sprite width={40} height={40} image={kisikIcon} x={kisikModel.currentX} y={kisikModel.currentY} />
         <Sprite width={40} height={40} image={bagIcon} x={bugModel.currentX} y={bugModel.currentY} />
