@@ -1,14 +1,15 @@
-import { Button, SidePage } from "@skbkontur/react-ui"
+import { Button, Link, SidePage } from "@skbkontur/react-ui"
 import './App.css';
 import { Editor, useMonaco } from "@monaco-editor/react";
 import { FC, useEffect, useState } from "react";
-import { Stage, Sprite, Container } from '@pixi/react';
+import { Stage, Sprite, Container, useApp } from '@pixi/react';
 import { KonturColors } from "@skbkontur/colors";
 import kisikIcon from './pinpng.com-cat-png-607501.png';
 import bagIcon from './pinpng.com-bug-png-1058896.png';
 import { Command, moveKisik } from "./extractCommandsAndCount";
 import { KisikModel } from './kisik.model';
 import { observer } from "mobx-react";
+import { BugModel } from './bug.model';
 
 const INITIAL_VALUE = `// Опиши действия котика тут
 // Пример команд на первый спринт (ход)
@@ -20,11 +21,16 @@ const DEFAULT_LANGUAGE = "myLang";
 
 type Props = {
   kisikModel: KisikModel;
+  bugModel: BugModel;
 }
 
-export const App: FC<Props> = observer(({ kisikModel }) => {
+export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
   const [editorContent, setEditorContent] = useState('');
   const monaco = useMonaco();
+
+  useEffect(() => {
+    bugModel.checkKisikCatchMe();
+  }, [bugModel, kisikModel, bugModel.currentPosition, kisikModel.currentPosition])
 
   useEffect(() => {
     if (!monaco) {
@@ -83,8 +89,8 @@ export const App: FC<Props> = observer(({ kisikModel }) => {
       <main>
       <Stage width={1200} height={800} options={{ background: KonturColors.greenMint70 }}>
       <Container position={[300, 300]}>
-        <Sprite width={130} height={120} image={kisikIcon} x={kisikModel.currentX} y={kisikModel.currentY} />
-        <Sprite width={40} height={40} image={bagIcon} x={30} y={10} />
+        <Sprite width={40} height={40} image={kisikIcon} x={kisikModel.currentX} y={kisikModel.currentY} />
+        <Sprite width={40} height={40} image={bagIcon} x={bugModel.currentX} y={bugModel.currentY} />
       </Container>
     </Stage>
       </main>
@@ -132,10 +138,13 @@ export const App: FC<Props> = observer(({ kisikModel }) => {
       />
     </div>
         </SidePage.Body>
-        <SidePage.Footer>
+        <SidePage.Footer gap={96}>
           <Button onClick={() => moveKisik(editorContent.split('\n') as Command[], kisikModel)} size="large" use="primary">
             Запустить ход
           </Button>
+          <Link target="_blank" href="https://kontur.ru/bugbounty" >
+            Узнать про Bug Bounty в Контуре
+          </Link>
         </SidePage.Footer>
       </SidePage>
     </aside>
