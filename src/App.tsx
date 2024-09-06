@@ -1,73 +1,79 @@
-import { Button, SidePage, Toast } from "@skbkontur/react-ui"
+import { Button, SidePage } from "@skbkontur/react-ui"
 import './App.css';
 import { Editor, useMonaco } from "@monaco-editor/react";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Stage, Sprite, Container } from '@pixi/react';
 import { KonturColors } from "@skbkontur/colors";
 import kisikIcon from './pinpng.com-cat-png-607501.png';
 import bagIcon from './pinpng.com-bug-png-1058896.png';
+import { Command, moveKisik } from "./extractCommandsAndCount";
+import { KisikModel } from './kisik.model';
+import { observer } from "mobx-react";
 
 const INITIAL_VALUE = `// Опиши действия котика тут
-// За ход котик может сделать только три команды
-// Остальные команды котик проигнорирует (выполнит в следующем спринте)
-// Пример команд на первом ходу
+// Пример команд на первый спринт (ход)
 направо();
 вниз();
 направо();
 `;
 const DEFAULT_LANGUAGE = "myLang";
 
-export const App = () => {
+type Props = {
+  kisikModel: KisikModel;
+}
+
+export const App: FC<Props> = observer(({ kisikModel }) => {
   const [editorContent, setEditorContent] = useState('');
   const monaco = useMonaco();
 
   useEffect(() => {
-    if (monaco) {
-      const myLanguage = {
-        id: 'myLang',
-        extensions: ['.mylang'],
-        aliases: ['My Lang', 'mylang'],
-        mimetypes: ['text/x-mylang']
-      };
-      monaco.languages.register(myLanguage);
-
-      // Snippets for your functions
-      const functionSnippets = [
-        {
-          label: "налево",
-          detail: "Call the 'nalevo' function.",
-          body: ["налево();"]
-        },
-        {
-          label: "направо",
-          detail: "Call the 'napravo' function.",
-          body: ["направо();"]
-        },
-        {
-          label: "вверх",
-          detail: "Call the 'vverh' function.",
-          body: ["вверх();"]
-        },
-        {
-          label: "вниз",
-          detail: "Call the 'vniz' function.",
-          body: ["вниз();"]
-        }
-      ];
-
-      monaco.languages.registerCompletionItemProvider('myLang', {
-        // TODO: доразобраться с автокомплитом для своего языка
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        provideCompletionItems: () => {
-            return { suggestions: functionSnippets };
-        }
-      });
+    if (!monaco) {
+      return;
     }
+
+    const myLanguage = {
+      id: 'myLang',
+      extensions: ['.mylang'],
+      aliases: ['My Lang', 'mylang'],
+      mimetypes: ['text/x-mylang']
+    };
+    monaco.languages.register(myLanguage);
+
+    // Snippets for your functions
+    const functionSnippets = [
+      {
+        label: "налево",
+        detail: "Call the 'налево();' function.",
+        body: ["налево();"]
+      },
+      {
+        label: "направо",
+        detail: "Call the 'направо();' function.",
+        body: ["направо();"]
+      },
+      {
+        label: "вверх",
+        detail: "Call the 'вверх();' function.",
+        body: ["вверх();"]
+      },
+      {
+        label: "вниз",
+        detail: "Call the 'вниз();' function.",
+        body: ["вниз();"]
+      }
+    ];
+
+    monaco.languages.registerCompletionItemProvider('myLang', {
+      // TODO: доразобраться с автокомплитом для своего языка
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      provideCompletionItems: () => {
+          return { suggestions: functionSnippets };
+      }
+    });
   }, [monaco])
 
   const editorDidMount = (editor: { getValue: () => string; }) => {
-    console.log('editor did mount!', editor);
     const content = editor.getValue();
     setEditorContent(content);
   };
@@ -77,7 +83,7 @@ export const App = () => {
       <main>
       <Stage width={1200} height={800} options={{ background: KonturColors.greenMint70 }}>
       <Container position={[300, 300]}>
-        <Sprite width={130} height={120} image={kisikIcon} x={250} y={220} />
+        <Sprite width={130} height={120} image={kisikIcon} x={kisikModel.currentX} y={kisikModel.currentY} />
         <Sprite width={40} height={40} image={bagIcon} x={30} y={10} />
       </Container>
     </Stage>
@@ -97,22 +103,22 @@ export const App = () => {
           <ul>
             <li>
               <code>
-                налево()
+                налево();
               </code>
             </li>
             <li>
               <code>
-                направо()
+                направо();
               </code>
             </li>
             <li>
               <code>
-                вверх()
+                вверх();
               </code>
             </li>
             <li>
               <code>
-                вниз()
+                вниз();
               </code>
             </li>
           </ul>
@@ -127,7 +133,7 @@ export const App = () => {
     </div>
         </SidePage.Body>
         <SidePage.Footer>
-          <Button onClick={() => Toast.push(editorContent)} size="large" use="primary">
+          <Button onClick={() => moveKisik(editorContent.split('\n') as Command[], kisikModel)} size="large" use="primary">
             Запустить ход
           </Button>
         </SidePage.Footer>
@@ -135,4 +141,4 @@ export const App = () => {
     </aside>
     </>
   )
-}
+})
