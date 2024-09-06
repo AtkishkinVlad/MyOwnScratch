@@ -2,7 +2,7 @@ import { Button, Link, SidePage } from "@skbkontur/react-ui"
 import './App.css';
 import { Editor, useMonaco } from "@monaco-editor/react";
 import { FC, useEffect, useState } from "react";
-import { Stage, Sprite, Container, useApp } from '@pixi/react';
+import { Stage, Sprite, Container } from '@pixi/react';
 import { KonturColors } from "@skbkontur/colors";
 import kisikIcon from './pinpng.com-cat-png-607501.png';
 import bagIcon from './pinpng.com-bug-png-1058896.png';
