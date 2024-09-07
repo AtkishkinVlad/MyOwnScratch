@@ -1,13 +1,14 @@
 import { makeAutoObservable } from "mobx";
 import { kisikModel } from "./kisik.model";
 import { SingleToast } from "@skbkontur/react-ui";
+import { gameModel } from "./game.model";
 
 function getRandom(list: number[]): number {
   return list[Math.floor((Math.random()*list.length))];
 }
 
-const initialX = [100, 170, -140];
-const initialY = [100, -100, 150];
+const initialX = [100, 170, -140, 130, 120, 110, 220, 22, 66, 74, -74];
+const initialY = [100, -100, 150, 130, 120, 110, 220, 22, 66, 74, -74];
 
 function equal(firstValue: number, secondValue: number, dispense: number): boolean {
   return Math.abs(firstValue - secondValue) <= dispense;
@@ -16,8 +17,10 @@ function equal(firstValue: number, secondValue: number, dispense: number): boole
 export class BugModel {
   x = getRandom(initialX);
   y = getRandom(initialY);
+  worth: number;
 
-  constructor() {
+  constructor(worth: number) {
+    this.worth = worth;
     makeAutoObservable(this);
   }
 
@@ -55,7 +58,8 @@ export class BugModel {
 
     if (equal(this.x, x, 15) && equal(this.y, y, 15)) {
       SingleToast.push('Кисик поймал баг')
-      this.removeBug()
+      this.removeBug();
+      gameModel.changeScore(this.worth)
       return true;
     }
 
@@ -63,4 +67,7 @@ export class BugModel {
   }
 }
 
-export const bugModel = new BugModel();
+// Сумма должна быть 99
+export const bugModelFirst = new BugModel(22);
+export const bugModelSecond = new BugModel(19);
+export const bugModelThird = new BugModel(58);

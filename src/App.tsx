@@ -1,8 +1,8 @@
-import { Button, Link, SidePage } from "@skbkontur/react-ui"
+import { Button, Hint, Link, MiniModal, SidePage } from "@skbkontur/react-ui"
 import './App.css';
-import { Editor, useMonaco } from "@monaco-editor/react";
+import { Editor } from "@monaco-editor/react";
 import { FC, useEffect, useState } from "react";
-import { Stage, Sprite, Container } from '@pixi/react';
+import { Stage, Sprite, Container, Text } from '@pixi/react';
 import { KonturColors } from "@skbkontur/colors";
 import kisikIcon from './pinpng.com-cat-png-607501.png';
 import bagIcon from './pinpng.com-bug-png-1058896.png';
@@ -13,18 +13,24 @@ import { BugModel } from './bug.model';
 import { runInAction } from "mobx";
 import { TransportAirRocketIcon24Regular } from '@skbkontur/icons/icons/TransportAirRocketIcon/TransportAirRocketIcon24Regular'
 import { QuestionCircleIcon16Regular } from '@skbkontur/icons/icons/QuestionCircleIcon/QuestionCircleIcon16Regular'
+import { HeartIcon64Regular } from '@skbkontur/icons/icons/HeartIcon/HeartIcon64Regular'
+import { gameModel } from "./game.model";
+import { CopyIcon16Regular } from "@skbkontur/icons/icons/CopyIcon/CopyIcon16Regular";
+import { TextStyle } from "pixi.js";
 
-const INITIAL_VALUE = `// Опиши действия котика тут
+const INITIAL_VALUE = `// Закодируй действия котика тут
 // Пример команд на первый спринт (ход)
 направо();
 вниз();
 направо();
 `;
-const DEFAULT_LANGUAGE = "myLang";
+const DEFAULT_LANGUAGE = "ru";
 
 type Props = {
   kisikModel: KisikModel;
-  bugModel: BugModel;
+  bugModelFirst: BugModel;
+  bugModelSecond: BugModel;
+  bugModelThird: BugModel;
 }
 
 function getRandomInt(min: number, max: number) {
@@ -33,60 +39,35 @@ function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
+function renderWinModal() {
+  return (
+    <MiniModal width={400}>
+      <MiniModal.Header icon={<HeartIcon64Regular />}>
+        Мы отловили все баги
+      </MiniModal.Header>
+      <MiniModal.Body>
+        <p>
+          Котик был рад искать баги под твоим руководством и считает тебя настоящим героем.
+        </p>
+        <p>
+          В знак благодарности он рассказал тебе о тайном числе — 99.
+        </p>
+        <p>
+          Котик говорит, что число поможет тебе получить кайфовый мерч Контура 😎
+        </p>
+      </MiniModal.Body>
+    </MiniModal>
+  )
+}
+
+export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSecond, bugModelThird }) => {
   const [editorContent, setEditorContent] = useState('');
-  const monaco = useMonaco();
 
   useEffect(() => {
-    bugModel.checkKisikCatchMe();
-  }, [bugModel, kisikModel, bugModel.currentPosition, kisikModel.currentPosition])
-
-  useEffect(() => {
-    if (!monaco) {
-      return;
-    }
-
-    const myLanguage = {
-      id: 'myLang',
-      extensions: ['.mylang'],
-      aliases: ['My Lang', 'mylang'],
-      mimetypes: ['text/x-mylang']
-    };
-    monaco.languages.register(myLanguage);
-
-    // Snippets for your functions
-    const functionSnippets = [
-      {
-        label: "налево",
-        detail: "Call the 'налево();' function.",
-        body: ["налево();"]
-      },
-      {
-        label: "направо",
-        detail: "Call the 'направо();' function.",
-        body: ["направо();"]
-      },
-      {
-        label: "вверх",
-        detail: "Call the 'вверх();' function.",
-        body: ["вверх();"]
-      },
-      {
-        label: "вниз",
-        detail: "Call the 'вниз();' function.",
-        body: ["вниз();"]
-      }
-    ];
-
-    monaco.languages.registerCompletionItemProvider('myLang', {
-      // TODO: доразобраться с автокомплитом для своего языка
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      provideCompletionItems: () => {
-          return { suggestions: functionSnippets };
-      }
-    });
-  }, [monaco])
+    bugModelFirst.checkKisikCatchMe();
+    bugModelSecond.checkKisikCatchMe();
+    bugModelThird.checkKisikCatchMe();
+  }, [bugModelFirst, bugModelSecond, bugModelThird, kisikModel, bugModelFirst.currentPosition, bugModelSecond.currentPosition, bugModelThird.currentPosition])
 
   const editorDidMount = (editor: { getValue: () => string; }) => {
     const content = editor.getValue();
@@ -96,13 +77,19 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       runInAction(() => {
-        bugModel.changeX(getRandomInt(-40, 40))
-        bugModel.changeY(getRandomInt(-40, 40))
+        bugModelFirst.changeX(getRandomInt(-20, 20))
+        bugModelFirst.changeY(getRandomInt(-20, 20))
+
+        bugModelSecond.changeX(getRandomInt(-20, 20))
+        bugModelSecond.changeY(getRandomInt(-20, 20))
+
+        bugModelThird.changeX(getRandomInt(-20, 20))
+        bugModelThird.changeY(getRandomInt(-20, 20))
       })
-    }, 2000)
+    }, 1000)
 
     return () => clearInterval(interval)
-  }, [bugModel])
+  }, [bugModelFirst, bugModelSecond, bugModelThird])
 
   return (
     <>
@@ -110,7 +97,17 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
       <Stage width={2000} height={2000} options={{ background: KonturColors.greenMint70 }}>
       <Container position={[500, 300]}>
         <Sprite width={40} height={40} image={kisikIcon} x={kisikModel.currentX} y={kisikModel.currentY} />
-        <Sprite width={40} height={40} image={bagIcon} x={bugModel.currentX} y={bugModel.currentY} />
+        <Sprite width={40} height={40} image={bagIcon} x={bugModelFirst.currentX} y={bugModelFirst.currentY} />
+        <Sprite width={40} height={40} image={bagIcon} x={bugModelSecond.currentX} y={bugModelSecond.currentY} />
+        <Sprite width={40} height={40} image={bagIcon} x={bugModelThird.currentX} y={bugModelThird.currentY} />
+        <Text x={-50} y={-280} text={`Текущий счёт ${gameModel.currentScore}`} style={
+          new TextStyle({
+            align: 'center',
+            fontFamily: "Lab Grotesque, -apple-system, BlinkMacSystemFont, Arial, Liberation Sans, Nimbus Sans L, sans-serif",
+            fontSize: 24,
+            fill: KonturColors.grayscaleText
+          })
+        } />
       </Container>
     </Stage>
       </main>
@@ -126,26 +123,41 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
           <p className="rules">
             Баги будут гулять по разным частям системы, но ты точно сможешь остановить их 😎
           </p>
-          <ul>
-            <li>
+          <ul className="commands">
+            <li className="commands__title">
+              Доступные команды
+            </li>
+            <li className="commands__command">
               <code>
                 налево();
               </code>
+              <Hint text="Скопировать команду в буфер обмена" pos="right">
+                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('налево();')} />
+              </Hint>
             </li>
-            <li>
+            <li className="commands__command">
               <code>
                 направо();
               </code>
+              <Hint text="Скопировать команду в буфер обмена" pos="right">
+                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('направо();')} />
+              </Hint>
             </li>
-            <li>
+            <li className="commands__command">
               <code>
                 вверх();
               </code>
+              <Hint text="Скопировать команду в буфер обмена" pos="right">
+                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('вверх();')} />
+              </Hint>
             </li>
-            <li>
+            <li className="commands__command">
               <code>
                 вниз();
               </code>
+              <Hint text="Скопировать команду в буфер обмена" pos="right">
+                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('вниз();')} />
+              </Hint>
             </li>
           </ul>
           <div className="editor">
@@ -168,6 +180,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModel }) => {
         </SidePage.Footer>
       </SidePage>
     </aside>
+    {gameModel.isWinScore && renderWinModal()}
     </>
   )
 })
