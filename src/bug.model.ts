@@ -57,7 +57,7 @@ export class BugModel {
     const { x, y } = kisikModel.currentPosition
 
     if (equal(this.x, x, 15) && equal(this.y, y, 15)) {
-      SingleToast.push('Кисик поймал баг')
+      SingleToast.push('Котик поймал баг 😸')
       this.removeBug();
       gameModel.changeScore(this.worth)
       return true;
