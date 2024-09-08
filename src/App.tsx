@@ -1,6 +1,5 @@
-import { Button, Hint, Link, MiniModal, SidePage } from "@skbkontur/react-ui"
+import { Button, Hint, Link, MiniModal, SidePage, Textarea } from "@skbkontur/react-ui"
 import './App.css';
-import { Editor } from "@monaco-editor/react";
 import { FC, useEffect, useState } from "react";
 import { Stage, Sprite, Container, Text } from '@pixi/react';
 import { KonturColors } from "@skbkontur/colors";
@@ -24,7 +23,6 @@ const INITIAL_VALUE = `// Закодируй действия котика ту�
 вниз();
 направо();
 `;
-const DEFAULT_LANGUAGE = "ru";
 
 type Props = {
   kisikModel: KisikModel;
@@ -47,7 +45,7 @@ function renderWinModal() {
       </MiniModal.Header>
       <MiniModal.Body>
         <p>
-          Котик был рад искать баги под твоим руководством и считает тебя настоящим героем.
+          Котик был рад искать баги под твоим руководством.
         </p>
         <p>
           В знак благодарности он рассказал тебе о тайном числе — 99.
@@ -61,18 +59,13 @@ function renderWinModal() {
 }
 
 export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSecond, bugModelThird }) => {
-  const [editorContent, setEditorContent] = useState('');
+  const [editorContent, setEditorContent] = useState(INITIAL_VALUE);
 
   useEffect(() => {
     bugModelFirst.checkKisikCatchMe();
     bugModelSecond.checkKisikCatchMe();
     bugModelThird.checkKisikCatchMe();
   }, [bugModelFirst, bugModelSecond, bugModelThird, kisikModel, bugModelFirst.currentPosition, bugModelSecond.currentPosition, bugModelThird.currentPosition])
-
-  const editorDidMount = (editor: { getValue: () => string; }) => {
-    const content = editor.getValue();
-    setEditorContent(content);
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -160,15 +153,12 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
               </Hint>
             </li>
           </ul>
-          <div className="editor">
-      <Editor
-        height="450px"
-        defaultLanguage={DEFAULT_LANGUAGE}
-        defaultValue={INITIAL_VALUE}
-        onMount={editorDidMount}
-        onChange={(value) => setEditorContent(String(value))}
+      <Textarea
+        autoResize
+        value={editorContent}
+        width={520}
+        onChange={(event) => setEditorContent(event.target.value)}
       />
-    </div>
         </SidePage.Body>
         <SidePage.Footer gap={80}>
           <Button rightIcon={<TransportAirRocketIcon24Regular />} onClick={() => moveKisik(editorContent.split('\n') as Command[], kisikModel)} size="large" use="primary">
