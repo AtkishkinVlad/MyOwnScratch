@@ -56,7 +56,7 @@ export class BugModel {
   checkKisikCatchMe() {
     const { x, y } = kisikModel.currentPosition
 
-    if (equal(this.x, x, 15) && equal(this.y, y, 15)) {
+    if (equal(this.x, x, 20) && equal(this.y, y, 20)) {
       SingleToast.push('Котик поймал баг 😸')
       this.removeBug();
       gameModel.changeScore(this.worth)
