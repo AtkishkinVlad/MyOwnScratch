@@ -76,16 +76,16 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
   useEffect(() => {
     const interval = setInterval(() => {
       runInAction(() => {
-        bugModelFirst.changeX(getRandomInt(-20, 20))
-        bugModelFirst.changeY(getRandomInt(-20, 20))
+        bugModelFirst.changeX(getRandomInt(-10, 10))
+        bugModelFirst.changeY(getRandomInt(-10, 10))
 
-        bugModelSecond.changeX(getRandomInt(-20, 20))
-        bugModelSecond.changeY(getRandomInt(-20, 20))
+        bugModelSecond.changeX(getRandomInt(-10, 10))
+        bugModelSecond.changeY(getRandomInt(-10, 10))
 
-        bugModelThird.changeX(getRandomInt(-20, 20))
-        bugModelThird.changeY(getRandomInt(-20, 20))
+        bugModelThird.changeX(getRandomInt(-10, 10))
+        bugModelThird.changeY(getRandomInt(-10, 10))
       })
-    }, 1000)
+    }, 500)
 
     return () => clearInterval(interval)
   }, [bugModelFirst, bugModelSecond, bugModelThird])
