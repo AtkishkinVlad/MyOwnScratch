@@ -1,4 +1,4 @@
-import { Button, Center, Hint, Link, MiniModal, SidePage, Textarea } from "@skbkontur/react-ui"
+import { Button, Hint, Link, MiniModal, SidePage, Textarea } from "@skbkontur/react-ui"
 import './App.css';
 import { FC, useEffect, useState } from "react";
 import { Stage, Sprite, Container, Text } from '@pixi/react';
