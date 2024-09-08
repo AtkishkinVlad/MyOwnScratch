@@ -99,6 +99,7 @@
 body {
     font-family: Lab Grotesque, -apple-system, BlinkMacSystemFont, Arial,
       Liberation Sans, Nimbus Sans L, sans-serif;
+    background-color: var(--kontur-green-mint-70);
 }
 
 .body {
@@ -128,6 +129,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  color: var(--kontur-grayscale-text);
 }
 
 .commands__title {
@@ -141,4 +143,16 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.mobile {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--kontur-grayscale-white-fff);
+  height: 100vh;
+  width: 300px;
 }

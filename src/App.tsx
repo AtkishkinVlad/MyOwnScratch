@@ -1,4 +1,4 @@
-import { Button, Hint, Link, MiniModal, SidePage, Textarea } from "@skbkontur/react-ui"
+import { Button, Center, Hint, Link, MiniModal, SidePage, Textarea } from "@skbkontur/react-ui"
 import './App.css';
 import { FC, useEffect, useState } from "react";
 import { Stage, Sprite, Container, Text } from '@pixi/react';
@@ -16,6 +16,8 @@ import { HeartIcon64Regular } from '@skbkontur/icons/icons/HeartIcon/HeartIcon64
 import { gameModel } from "./game.model";
 import { CopyIcon16Regular } from "@skbkontur/icons/icons/CopyIcon/CopyIcon16Regular";
 import { TextStyle } from "pixi.js";
+import { BlockIcon32Regular } from "@skbkontur/icons/icons/BlockIcon/BlockIcon32Regular";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 const INITIAL_VALUE = `// Закодируй действия котика тут
 // Пример команд на первый спринт (ход)
@@ -60,6 +62,10 @@ function renderWinModal() {
 
 export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSecond, bugModelThird }) => {
   const [editorContent, setEditorContent] = useState(INITIAL_VALUE);
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+  const isMediumDevice = useMediaQuery(
+    "only screen and (min-width : 769px) and (max-width : 992px)"
+  );
 
   useEffect(() => {
     bugModelFirst.checkKisikCatchMe();
@@ -84,7 +90,15 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
     return () => clearInterval(interval)
   }, [bugModelFirst, bugModelSecond, bugModelThird])
 
-  return (
+  return (isSmallDevice || isMediumDevice) ? (
+      <main className="mobile">
+        <BlockIcon32Regular />
+        <h3>
+          На данный момент игра не работает на мобильных устройствах :(
+        </h3>
+      </main>
+    )
+  : (
     <>
       <main>
       <Stage width={2000} height={2000} options={{ background: KonturColors.greenMint70 }}>
@@ -125,7 +139,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
                 налево();
               </code>
               <Hint text="Скопировать команду в буфер обмена" pos="right">
-                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('налево();')} />
+                <Button icon={<CopyIcon16Regular color={KonturColors.grayscaleText} />} use="text" onClick={() => window.navigator.clipboard.writeText('налево();')} />
               </Hint>
             </li>
             <li className="commands__command">
@@ -133,7 +147,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
                 направо();
               </code>
               <Hint text="Скопировать команду в буфер обмена" pos="right">
-                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('направо();')} />
+                <Button icon={<CopyIcon16Regular color={KonturColors.grayscaleText}  />} use="text" onClick={() => window.navigator.clipboard.writeText('направо();')} />
               </Hint>
             </li>
             <li className="commands__command">
@@ -141,7 +155,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
                 вверх();
               </code>
               <Hint text="Скопировать команду в буфер обмена" pos="right">
-                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('вверх();')} />
+                <Button icon={<CopyIcon16Regular color={KonturColors.grayscaleText}  />} use="text" onClick={() => window.navigator.clipboard.writeText('вверх();')} />
               </Hint>
             </li>
             <li className="commands__command">
@@ -149,7 +163,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
                 вниз();
               </code>
               <Hint text="Скопировать команду в буфер обмена" pos="right">
-                <Button icon={<CopyIcon16Regular />} use="text" onClick={() => window.navigator.clipboard.writeText('вниз();')} />
+                <Button icon={<CopyIcon16Regular color={KonturColors.grayscaleText}  />} use="text" onClick={() => window.navigator.clipboard.writeText('вниз();')} />
               </Hint>
             </li>
           </ul>
