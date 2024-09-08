@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 export class KisikModel {
   x = 25;
-  y = 30;
+  y = 25;
 
   constructor() {
     makeAutoObservable(this);
