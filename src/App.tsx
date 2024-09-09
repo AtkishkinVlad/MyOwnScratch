@@ -19,11 +19,10 @@ import { TextStyle } from "pixi.js";
 import { BlockIcon32Regular } from "@skbkontur/icons/icons/BlockIcon/BlockIcon32Regular";
 import { useMediaQuery } from "@uidotdev/usehooks";
 
-const INITIAL_VALUE = `// Закодируй действия котика тут
+const INITIAL_VALUE = `// Опиши действия кота ниже в редакторе
 // Пример команд на первый спринт (ход)
 направо();
 вниз();
-направо();
 `;
 
 type Props = {
