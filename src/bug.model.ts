@@ -4,67 +4,77 @@ import { SingleToast } from "@skbkontur/react-ui";
 import { gameModel } from "./game.model";
 
 function getRandom(list: number[]): number {
-  return list[Math.floor((Math.random()*list.length))];
+	return list[Math.floor(Math.random() * list.length)];
 }
 
-const initialX = [-200, 160, 170, -140, 140, 200, 190, -130, 190, 180, 170, 200, -200, -140, 140, 220, -220];
-const initialY = [-230, 160, 150, -130, -180, 190, 180, -130, 180, 160, 150, -160, -180, -150, 190, 230, -230];
+const initialX = [
+	-200, 160, 170, -140, 140, 200, 190, -130, 190, 180, 170, 200, -200, -140,
+	140, 220, -220,
+];
+const initialY = [
+	-230, 160, 150, -130, -180, 190, 180, -130, 180, 160, 150, -160, -180, -150,
+	190, 230, -230,
+];
 
-function equal(firstValue: number, secondValue: number, dispense: number): boolean {
-  return Math.abs(firstValue - secondValue) <= dispense;
+function equal(
+	firstValue: number,
+	secondValue: number,
+	dispense: number,
+): boolean {
+	return Math.abs(firstValue - secondValue) <= dispense;
 }
 
 export class BugModel {
-  x = getRandom(initialX);
-  y = getRandom(initialY);
-  worth: number;
+	x = getRandom(initialX);
+	y = getRandom(initialY);
+	worth: number;
 
-  constructor(worth: number) {
-    this.worth = worth;
-    makeAutoObservable(this);
-  }
+	constructor(worth: number) {
+		this.worth = worth;
+		makeAutoObservable(this);
+	}
 
-  changeX(x: number) {
-    if (this.x + x < 550 && this.x - x > -550) {
-      this.x += x;
-    }
-  }
+	changeX(x: number) {
+		if (this.x + x < 550 && this.x - x > -550) {
+			this.x += x;
+		}
+	}
 
-  changeY(y: number) {
-    if (this.y + y < 550 && this.y - y > -550) {
-      this.y += y;
-    }
-  }
+	changeY(y: number) {
+		if (this.y + y < 550 && this.y - y > -550) {
+			this.y += y;
+		}
+	}
 
-  removeBug() {
-    this.x = Infinity;
-    this.y = Infinity;
-  }
+	removeBug() {
+		this.x = Infinity;
+		this.y = Infinity;
+	}
 
-  get currentX() {
-    return this.x;
-  }
+	get currentX() {
+		return this.x;
+	}
 
-  get currentY() {
-    return this.y;
-  }
+	get currentY() {
+		return this.y;
+	}
 
-  get currentPosition() {
-    return { x: this.x, y: this.y }
-  }
+	get currentPosition() {
+		return { x: this.x, y: this.y };
+	}
 
-  checkKisikCatchMe() {
-    const { x, y } = kisikModel.currentPosition
+	checkKisikCatchMe() {
+		const { x, y } = kisikModel.currentPosition;
 
-    if (equal(this.x, x, 25) && equal(this.y, y, 25)) {
-      SingleToast.push('Кот поймал баг 😸')
-      this.removeBug();
-      gameModel.changeScore(this.worth)
-      return true;
-    }
+		if (equal(this.x, x, 25) && equal(this.y, y, 25)) {
+			SingleToast.push("Кот поймал баг 😸");
+			this.removeBug();
+			gameModel.changeScore(this.worth);
+			return true;
+		}
 
-    return false;
-  }
+		return false;
+	}
 }
 
 // Сумма должна быть 99
