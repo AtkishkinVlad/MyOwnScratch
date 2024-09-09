@@ -7,8 +7,8 @@ function getRandom(list: number[]): number {
   return list[Math.floor((Math.random()*list.length))];
 }
 
-const initialX = [160, 170, -140, 130, 220, -220, 280, 190, 260, 250];
-const initialY = [160, 150, -130, 220, -220, 280, 190, 260, 250];
+const initialX = [160, 170, -140, 140, 200, 190, -130, 190, 180, 170, 200, -200, -140, 140];
+const initialY = [160, 150, -130, -180, 190, 180, -130, 180, 160, 150, -160, -180, -150, 190];
 
 function equal(firstValue: number, secondValue: number, dispense: number): boolean {
   return Math.abs(firstValue - secondValue) <= dispense;
