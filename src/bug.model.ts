@@ -7,8 +7,8 @@ function getRandom(list: number[]): number {
   return list[Math.floor((Math.random()*list.length))];
 }
 
-const initialX = [160, 170, -140, 140, 200, 190, -130, 190, 180, 170, 200, -200, -140, 140];
-const initialY = [160, 150, -130, -180, 190, 180, -130, 180, 160, 150, -160, -180, -150, 190];
+const initialX = [-200, 160, 170, -140, 140, 200, 190, -130, 190, 180, 170, 200, -200, -140, 140, 220, -220];
+const initialY = [-230, 160, 150, -130, -180, 190, 180, -130, 180, 160, 150, -160, -180, -150, 190, 230, -230];
 
 function equal(firstValue: number, secondValue: number, dispense: number): boolean {
   return Math.abs(firstValue - secondValue) <= dispense;
@@ -56,8 +56,8 @@ export class BugModel {
   checkKisikCatchMe() {
     const { x, y } = kisikModel.currentPosition
 
-    if (equal(this.x, x, 20) && equal(this.y, y, 20)) {
-      SingleToast.push('Котик поймал баг 😸')
+    if (equal(this.x, x, 25) && equal(this.y, y, 25)) {
+      SingleToast.push('Кот поймал баг 😸')
       this.removeBug();
       gameModel.changeScore(this.worth)
       return true;

@@ -41,19 +41,22 @@ function getRandomInt(min: number, max: number) {
 
 function renderWinModal() {
   return (
-    <MiniModal width={400}>
+    <MiniModal width={500}>
       <MiniModal.Header icon={<HeartIcon64Regular />}>
         Мы отловили все баги
       </MiniModal.Header>
       <MiniModal.Body>
         <p>
-          Котик был рад искать баги под твоим руководством.
+          Кот был рад искать баги под твоим руководством!
         </p>
         <p>
-          В знак благодарности он рассказал тебе о тайном числе — 99.
+          В знак благодарности он раскрыл тебе число — 99.
         </p>
         <p>
-          Котик говорит, что число поможет тебе получить кайфовый мерч Контура 😎
+          Не забудь записать его себе.
+        </p>
+        <p>
+          Виртуальный помощник говорит, что число поможет спасти День программиста и получить мерч Контура 😎
         </p>
       </MiniModal.Body>
     </MiniModal>
@@ -76,14 +79,14 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
   useEffect(() => {
     const interval = setInterval(() => {
       runInAction(() => {
-        bugModelFirst.changeX(getRandomInt(-10, 10))
-        bugModelFirst.changeY(getRandomInt(-10, 10))
+        bugModelFirst.changeX(getRandomInt(-15, 15))
+        bugModelFirst.changeY(getRandomInt(-15, 15))
 
-        bugModelSecond.changeX(getRandomInt(-10, 10))
-        bugModelSecond.changeY(getRandomInt(-10, 10))
+        bugModelSecond.changeX(getRandomInt(-15, 15))
+        bugModelSecond.changeY(getRandomInt(-15, 15))
 
-        bugModelThird.changeX(getRandomInt(-10, 10))
-        bugModelThird.changeY(getRandomInt(-10, 10))
+        bugModelThird.changeX(getRandomInt(-15, 15))
+        bugModelThird.changeY(getRandomInt(-15, 15))
       })
     }, 500)
 
@@ -119,13 +122,13 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
     </Stage>
       </main>
       <aside>
-      <SidePage width={600}>
+      <SidePage width={560}>
         <SidePage.Header>
           Правила игры
         </SidePage.Header>
         <SidePage.Body className="body">
           <p className="rules">
-            Тебе нужно помочь котику с помощью команд поймать все баги 😸
+            Тебе нужно помочь коту с помощью команд поймать все баги 😸
           </p>
           <p className="rules">
             Баги будут гулять по разным частям системы, но ты точно сможешь остановить их 😎
@@ -174,7 +177,7 @@ export const App: FC<Props> = observer(({ kisikModel, bugModelFirst, bugModelSec
         onChange={(event) => setEditorContent(event.target.value)}
       />
         </SidePage.Body>
-        <SidePage.Footer gap={80}>
+        <SidePage.Footer gap={64}>
           <Button rightIcon={<TransportAirRocketIcon24Regular />} onClick={() => moveKisik(editorContent.split('\n') as Command[], kisikModel)} size="large" use="primary">
             Запустить ход
           </Button>
