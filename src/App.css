@@ -152,6 +152,6 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: var(--kontur-grayscale-white-fff);
+  color: var(--kontur-grayscale-text);
   height: 100vh;
 }
